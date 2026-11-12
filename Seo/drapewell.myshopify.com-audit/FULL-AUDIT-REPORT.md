@@ -31,3 +31,45 @@
 - Search Console is connected as a restricted user and the performance query returned no usable data, so no clicks, impressions or index coverage figures.
 - No screenshots, backlink, Moz or DataForSEO data. Only 2 pages were fetched.
 - The score is an estimate from the sampled signals, not the full weighted rubric.
+
+---
+# Addendum: full sitemap crawl (2026-11-12)
+Crawled all 186 sitemap URLs (144 products, 23 collections, 16 pages, 2 blog URLs, home).
+
+| Check | Result |
+|---|---|
+| HTTP status | 184 x 200, **2 x 404** |
+| Duplicate titles / meta descriptions | none |
+| Missing meta description | 3 (`/pages/reviews` plus the 2 blog 404s) |
+| Titles over 60 chars | **43** (all products; avg product title 58 chars, so many truncate in SERPs) |
+| Meta descriptions over 160 chars | 7 (incl. homepage) |
+| Meta description under 70 chars | 1 (`/collections/fresh-this-week`) |
+| Pages without exactly one H1 | 2 (the blog 404s) |
+| noindex pages | 0 |
+| Canonical mismatch | 1 (`/products/micro-grill-egg-mate%E2%84%A2-...`, URL-encoded trademark symbol) |
+| Product pages with Product schema | 144 of 144, none with aggregateRating |
+| Image missing alt attribute | 1 page (`carbon-steel-nail-clipper...`) |
+| HTML size | avg ~339 KB; largest 1.07 MB (`geometric-shower-curtain`, `botanical-coastal-boho-peva-shower-curtain` ~1.07 MB, `terrazzo-shower-curtain` ~725 KB) |
+
+## New findings
+- **High: sitemap lists a blog that returns 404.** `/blogs/seo-news` and its one article are in the sitemap but 404 (likely unpublished or hidden). Remove it from the sitemap by republishing/deleting the blog, or restore it. Wasted crawl budget and a "submitted URL not found" signal.
+- **Medium: 43 product titles exceed 60 chars.** Shorten to about 55-60, leading with the product type and key attribute.
+- **Medium: shower-curtain product pages are up to 1.07 MB of HTML.** Likely variant JSON for many sizes/colours. Heavy for mobile parsing; consider trimming variant data or app output.
+- **Low: 7 long meta descriptions, 1 short, 1 missing** on `/pages/reviews`.
+- **Low: canonical differs on the egg-cooker product** (encoded ™ in the handle). Shorten the handle to plain ASCII and add a redirect.
+- **Positive:** unique titles and descriptions across 184 live pages, 100% product schema coverage, solid content pages (size guides, shipping and refund policies, FAQ) supporting E-E-A-T.
+
+---
+# Addendum 2: AI search / agent readiness
+- `llms.txt` present and descriptive (brand, market, currency, product themes). **Low risk note:** it publishes a personal-looking contact email (hotmail address). Consider a role address such as support@ on your own domain.
+- `/.well-known/ucp` returns 200 and `robots.txt` points to the UCP/MCP endpoint and `agents.md`: strong agentic-commerce readiness. WebMCP hooks are present in the homepage.
+- No `/.well-known/ai-catalog.json` (404). Optional, low priority.
+- No AI-bot-specific rules in robots.txt (GPTBot, ClaudeBot, PerplexityBot, Google-Extended all fall under `User-agent: *`, which allows them). Decide deliberately whether to allow AI crawlers.
+- Markdown delivery via `Accept: text/markdown` not supported. Optional.
+- Homepage has no `og:image:alt`, and no `rel="icon"` was found in the HTML (check the favicon in theme settings).
+- GEO: strong content pages (size guides, materials, FAQ, policies) are good citation candidates; add concise definition-style paragraphs and sourced specs to product pages to improve citability.
+
+## Consolidated priorities
+1. High: custom domain; fix or remove the 404 blog from the sitemap; cut script/variant weight on shower-curtain pages.
+2. Medium: shorten 43 product titles; dedupe homepage Organization/WebSite JSON-LD; fix homepage heading order; add review markup when available.
+3. Low: meta description lengths, favicon and og:image:alt, GTIN/MPN, role-based contact email.
